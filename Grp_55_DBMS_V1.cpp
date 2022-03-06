@@ -15,15 +15,18 @@ public:
     {
         return name;
     }
-    void setAttributes(///take your attributes in your order )
+    void setAttributes()  ///(take your attributes in your order )
     {
         ///process it and store it in this instance.
+    }
+    void clear(){
+        
     }
 
 };
 
 class Database{
-    vector<Table*> db;
+    vector<Table>db;
 
 public:
     void createTable(string tbl_name, string tbl_attributes)
@@ -86,7 +89,7 @@ void driver()
             {
                 db.dropTable(token[2]);
             }
-            else if(tokens[0]=="insert")//INSERT INTO table_name VALUES ( val1, val2, … );
+            else if(tokens[0]=="insert")//INSERT INTO table_name VALUES ( val1, val2, ï¿½ );
             {
                 ///here token[0] = insert, token[1] = into, token[2] = table_name, token[3] = (values).
                 db.insertValue(token[2], token[3]);
