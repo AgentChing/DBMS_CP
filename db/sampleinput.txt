@@ -1,0 +1,9 @@
+SCHEMA========
+Students#id#INT#name#STR#dept#STR
+TABEL=========
+123#POOJA#CS
+345#TINA#ME
+111#RAJ#CH
+110#RAJLAXMI#CH
+108#RAHUL#CS
+
