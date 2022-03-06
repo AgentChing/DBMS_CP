@@ -20,7 +20,7 @@ public:
         ///process it and store it in this instance.
     }
     void clear(){
-        
+
     }
 
 };
@@ -65,9 +65,23 @@ public:
 
 vector<string> tokenizer(string line)
 {
- vector<string> tokens;
- ///Convert lines to tokens in this token vector and return it
- return tokens;
+    vector<string> tokens;
+     char *c ;
+     c = strtok((char *)line.c_str()," ");
+    // cout<<c;
+     string a(c);
+     tokens.push_back(a);
+     while(c != NULL)
+     {
+         c = strtok(NULL, " ");
+         if(c == NULL)
+            break;
+         string b(c);
+          tokens.push_back(b);
+        // cout<<c;
+     }
+
+    return tokens;
 }
 
 void driver()
