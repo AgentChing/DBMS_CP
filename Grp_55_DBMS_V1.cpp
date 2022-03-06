@@ -2,6 +2,22 @@
 
 using namespace std;
 
+template<typename T>
+class Column{
+    string name;
+    string type;
+    vector<T> entries;
+public:
+    void setName(string col_name){name = col_name;}
+    string getName(){return name;}
+    void setType(string typ){type = typ;}
+    string getType(){return type;}
+    void addValue(T inp){entries.push_back(inp);}
+    T getValue(int i){return entries[i];}
+    vector<T> getValue(){return entries;}
+    void editValue(int index,T modification){entries[index] = modification;}
+};
+
 class Table{
     string name;
     ///Store attributes here
