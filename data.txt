@@ -1,7 +1,7 @@
-78 80 81 84 01 79
-Pujal Pushpak Ashwin Roshini Rutika Amit
-22 20 21 20 20 20
-female male male female female male
-1 3
-doremi how_to_survive_life
-hooman ashwin
+hooman ashwin 
+doremi how_to_survive_life 
+1 3 
+22 20 21 20 20 20 
+78 80 81 84 01 79 
+Pujal Pushpak Ashwin Roshini Rutika Amit 
+female male male female female male 

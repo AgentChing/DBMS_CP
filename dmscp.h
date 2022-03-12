@@ -127,3 +127,10 @@ std::vector<std::string > tokenizefile(std::string line)  ///breaks line into to
     return cleantokens(ret);
 
 }
+
+bool absolutecompare(std::string s1, std::string s2)
+{
+    std::transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
+    std::transform(s2.begin(), s2.end(), s2.begin(), ::tolower);
+    return s1==s2;
+}
