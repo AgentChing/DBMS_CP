@@ -1,4 +1,2 @@
-helloworld id int name   string
-naruto episodes int (characters string (rating int))
-sports type int name string medals int winner string year, int medaltype string;
-attr_name1 attr_type1, attr_name2 attr_type2,
+Table1 4 id int name string age int sex string
+Papers 3 type int title string author string 
