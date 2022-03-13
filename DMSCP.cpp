@@ -11,7 +11,7 @@ public:
 
     void showtable()
     {
-        cout<<endl<<"Table name: "<<name<<" Attribute count: "<<attr_count<<endl;
+        cout<<endl<<"Table name: "<<name<<endl<<"Attribute count: "<<attr_count<<endl;
         for(auto x: attr_type)
         {
             cout<<x.first<<" : "<<x.second<<"|  ";
@@ -47,11 +47,12 @@ string datafile = "data.txt";
 public:
     Database(){
         loadData();
-        showall();
     }
 
     void loadData()
     {
+        metadata.clear();
+        database.clear();
      ifstream meta(metafile);
      ifstream data(datafile);
      string line;
@@ -72,7 +73,9 @@ public:
               {
                   string line2;
                   getline (data, line2);
-                  t.attr_value.insert(pair<string, vector<string> >(v[i*2],tokenizefile(line2)));
+                  vector<string> datavalues = tokenizefile(line2);
+                  datavalues.erase(datavalues.begin());
+                  t.attr_value.insert(pair<string, vector<string> >(v[i*2],datavalues));
                   ///tablecolumns
               }
             database.insert(pair<string, Table>(t.name,t));
@@ -101,6 +104,7 @@ public:
             for(auto y: x.second.attr_type)
             {
                 meta2<<y.first<<" "<<y.second<<" ";
+                data2<<y.first<<" ";
                 for(auto z: x.second.attr_value.find(y.first)->second)
                 {
                     data2<<z<<" ";
@@ -111,6 +115,47 @@ public:
         }
         meta2.close();
         data2.close();
+    }
+
+    void addnew(vector<string> v)
+    {
+        v.erase(v.begin(),v.begin()+2);
+        string name = v[0];
+        if(database.find(name) == database.end())
+        {
+            v.erase(v.begin());
+        cout<<name<<endl;
+        vector<vector< string > > attr = breakdowntokens(tokenizefile(v[0]));
+        Table t;
+        t.name = name;
+        t.attr_count = attr.size();
+          for(int i=0;i<attr.size();i++)
+          {
+              if(attr[i].size()==2)
+              {
+                  t.attr_type.insert(pair<string,string>(attr[i][0],attr[i][1]));
+                  vector<string> temp2;
+                  t.attr_value.insert(pair<string,vector<string> >(attr[i][0],temp2));
+              }
+              else if(attr[i].size()==4)
+              {
+                  t.attr_type.insert(pair<string,string>(attr[i][0],attr[i][1]));
+                  vector<string> temp2;
+                  t.attr_value.insert(pair<string,vector<string> >(attr[i][0],temp2));
+                  ///creat attributes and bound them with conditions;
+              }
+              else{
+                cout<<"ERROR: INCORRECT INPUT";
+                return;
+              }
+          }
+          database.insert(pair<string,Table>(name,t));
+        }
+        else{
+            cout<<"COMMAND NOT EXECUTED: TABLE NAME ALREADY EXIST"<<endl;
+        }
+        storeData();
+        loadData();
     }
 };
 
@@ -128,11 +173,13 @@ void driver(Database d)
               }
               if(absolutecompare(v[0],"CREATE"))
               {
-                  cout<<"FOUND CREATE-------------";
+                  cout<<"FOUND CREATE-------------\n";
+                  d.addnew(v);
+
               }
               else if(absolutecompare(v[0],"DROP"))
               {
-
+                d.showall();
                   cout<<"FOUND DROP-------------";
               }else if(absolutecompare(v[0],"SELECT"))
               {
@@ -154,6 +201,8 @@ void driver(Database d)
                   cout<<"FOUND QUIT-------------";
                   d.storeData();
                   cout<<"\nDONE";
+                  myfile.close();
+                  return;
 
               }
               cout<<endl;
@@ -165,7 +214,9 @@ void driver(Database d)
 int main()
 {
     Database d;
+    cout<<endl<<"//////////////////////////////////////////////////////////// "<<endl;
     driver(d);
+    cout<<endl<<"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ "<<endl;
 
 
 

@@ -1,10 +1,9 @@
-CREATE TABLE Tbl1 (name string not null, id int check(int!=0) ,info string );
-Create table yolo(type int not null, title string , year int);
+CREATE TABLE Tbl1 (name string not null, id int check(int!=0), info string);
+Create table yolo(type int, title string , year int);
 Insert into Tbl1 values (Rashomon, 25, testcase_1)
 Insert into Tbl1 values ("Miratas", 27, testcase_2)
 Insert into Tbl1 values ("FORUPDATE", 29, "NOTYETUPDATED");
 select id from Tbl1 where name = "Rashomon";
 Update Tbl1 set info= "UPDATEDONE" where id=29;
 DROP TABLE yolo;
-Quit
  name string not null , id int check ( int!= 0 ) , info string

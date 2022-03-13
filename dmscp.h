@@ -23,6 +23,19 @@ std::string stripstring(std::string s)
 }
 
 
+std::string stripspace(std::string s)
+{
+    while(s[s.length()-1]==' ')
+    {
+        s.erase(s.length()-1,1);
+    }
+    while(s[0]==' ')
+    {
+        s.erase(0,1);
+    }
+    return s;
+}
+
 std::vector<std::string > cleantokens(std::vector<std::string > v)  ///removes extra space eating tokens like null tokens and ';' tokens
 {
     for(int i=v.size()-1;i>=0;i--)
@@ -30,7 +43,7 @@ std::vector<std::string > cleantokens(std::vector<std::string > v)  ///removes e
         if(v[i]==" "||v[i]==""||v[i]==";"||v[i]==" ;")
             v.erase(v.begin()+i);
         else{
-            v[i] = stripstring(v[i]);
+            v[i] = stripstring(stripspace(v[i]));
         }
     }
     return v;
@@ -133,4 +146,22 @@ bool absolutecompare(std::string s1, std::string s2)
     std::transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
     std::transform(s2.begin(), s2.end(), s2.begin(), ::tolower);
     return s1==s2;
+}
+
+std::vector<std::vector<std::string> > breakdowntokens(std::vector<std::string> v)
+{
+    std::vector<std::vector<std::string> > ret;
+    std::vector<std::string> temp;
+    for(int i=0;i<v.size();i++)
+    {
+        if(v[i] == ",")
+        {
+            ret.push_back(temp);
+            temp.clear();
+        }
+        else temp.push_back(v[i]);
+    }
+    ret.push_back(temp);
+    temp.clear();
+    return ret;
 }
