@@ -324,6 +324,8 @@ void driver(Database d)
                   v.erase(v.begin());
                   string name = v[0];
                   v.erase(v.begin());
+
+
                   if(absolutecompare(v[0],"WHERE"))
                   {
                     v.erase(v.begin());
@@ -345,22 +347,27 @@ void driver(Database d)
 
                   }
                   else{
-                    ///display all toshow
-                  }
 
-              }else if(absolutecompare(v[0],"INSERT"))
+                          cout<<"ERROR+warning......WARNING!!! skipping Where is not permited yet"<<endl<<" i worked my but off implementing it and you just skippin it?"<<endl<<"....oh, the disrespect..\n go get your ass some condition"<<endl;
+                  }
+                }
+
+              else if(absolutecompare(v[0],"INSERT"))
               {
                   cout<<"FOUND INSERT-------------";
 
-              }else if(absolutecompare(v[0],"DELETE"))
+              }
+              else if(absolutecompare(v[0],"DELETE"))
               {
                   cout<<"FOUND DELETE-------------";
 
-              }else if(absolutecompare(v[0],"UPDATE"))
+              }
+              else if(absolutecompare(v[0],"UPDATE"))
               {
                   cout<<"FOUND UPDATE-------------";
 
-              }else if(absolutecompare(v[0],"QUIT"))
+              }
+              else if(absolutecompare(v[0],"QUIT"))
               {
                   cout<<"FOUND QUIT-------------";
                   d.storeData();
