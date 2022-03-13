@@ -143,6 +143,16 @@ public:
         cout<<endl;
         }
     }
+
+    void deleterow(int i)
+    {
+        for(map<string, vector<string> >::iterator itr = attr_value.begin();itr != attr_value.end();itr++)
+        {
+            cout<<"here";
+            itr->second.erase(itr->second.begin()+i);
+        }
+
+    }
 };
 
 class Database{
@@ -400,7 +410,36 @@ void driver(Database d)
                }
               else if(absolutecompare(v[0],"DELETE"))
               {
+                  v = cleantokens(v);
                   cout<<"FOUND DELETE-------------";
+                  ///DELETE FROM table_name WHERE condition;
+                  if(!absolutecompare(v[1],"FROM") || !absolutecompare(v[3],"Where"))
+                  {
+                      cout<<"ERROR: Incorrect instruction format"<<endl;
+                      return;
+                  }
+                  if(d.database.find(v[2])==d.database.end())
+                  {
+                      cout<<"No Table FOUND"<<endl;
+                  }
+                  string name = v[2];
+                  v.erase(v.begin(),v.begin()+4);
+                  int len = d.database.find(name)->second.attr_value.begin()->second.size();
+                  for(int i=len-1;i>=0;i--)
+                  {
+                      cout<<"Here"<<endl;
+                      cout<<v[0]<<"|"<<v[1]<<"|"<<v[2]<<endl;
+                      if(d.database.find(name)->second.checkcondition(i,v[0],v[1],v[2]))
+                        cout<<"TRUE"<<endl;
+                      if(d.database.find(name)->second.checkcondition(i,v[0],v[1],v[2]))
+                      {
+                          /*for(map<string,vector<string> >::iterator x = d.database.find(name)->second.attr_value.begin(); x!=d.database.find(name)->second.attr_value.end();x++)
+                          {
+                              x->second.erase(x->second.begin()+i);
+                          }*/
+                          d.database.find(name)->second.deleterow(i);///-----------------------------------------------------------------------------------------------------
+                      }
+                  }
 
               }
               else if(absolutecompare(v[0],"UPDATE"))
