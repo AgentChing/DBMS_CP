@@ -289,10 +289,11 @@ void driver(Database d)
      string line;
      while (getline (myfile, line)) {
               vector<string> v = tokenizefile(line);
-              for(int i=0;i<v.size();i++)
+              /*for(int i=0;i<v.size();i++)
               {
-                  ///cout<<v[i]<<endl;
+                  ///cout<<v[i]<<"|";
               }
+              cout<<endl;*/
               if(absolutecompare(v[0],"CREATE"))
               {
                   cout<<"FOUND CREATE-------------\n";
@@ -354,9 +355,49 @@ void driver(Database d)
 
               else if(absolutecompare(v[0],"INSERT"))
               {
-                  cout<<"FOUND INSERT-------------";
+                  cout<<"FOUND INSERT-------------\n";
+                  ///Insert into Tbl1 values ("FORUPDATE", 29, "NOTYETUPDATED");
 
-              }
+                v.erase(v.begin(),v.begin()+2);
+                string name = v[0];
+                v.erase(v.begin());
+                vector<string> attr_names = seperatetokens(tokenizefile(v[0]));
+                v.erase(v.begin());
+                if(!absolutecompare(v[0],"values"))
+                {
+                    cout<<"ERROR: INCORRECT STATEMENT"<<endl;
+                    return;
+                }
+                v.erase(v.begin());
+
+                vector<string> vals = seperatetokens(tokenizefile(v[0]));
+                if(d.database.find(name)==d.database.end())
+                {
+                    cout<<"COMMAND NOT EXECUTED: no table named "<<name<<" found"<<endl;
+                    return;
+                }
+                map<string, Table>::iterator x = d.database.find(name);
+                for(int i=0;i<attr_names.size();i++)
+                {
+                    if(x->second.attr_value.find(attr_names[i]) == x->second.attr_value.end())
+                    {
+                        cout<<"COMMAND NOT EXECUTED: No Attribute named "<<attr_names[i]<<" is present in table "<<name<<endl;
+                        return;
+                    }
+                }
+                if(attr_names.size() == x->second.attr_value.size())
+                {
+                    for(int i=0;i<attr_names.size();i++)
+                    {
+                        x->second.attr_value.find(attr_names[i])->second.push_back(vals[i]);
+                    }
+                }
+                else{
+                    cout<<"ERROR: NO NULL ENTRY PERMITTED"<<endl;
+                    return;
+                }
+
+               }
               else if(absolutecompare(v[0],"DELETE"))
               {
                   cout<<"FOUND DELETE-------------";

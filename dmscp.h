@@ -49,6 +49,18 @@ std::vector<std::string > cleantokens(std::vector<std::string > v)  ///removes e
     return v;
 }
 
+std::vector<std::string > seperatetokens(std::vector<std::string > v)  ///removes extra space eating tokens like null tokens and ';' tokens
+{
+    for(int i=v.size()-1;i>=0;i--)
+    {
+        if(v[i]==" "||v[i]==""||v[i]==";"||v[i]==" ;"||v[i]==",")
+            v.erase(v.begin()+i);
+        else{
+            v[i] = stripstring(stripspace(v[i]));
+        }
+    }
+    return v;
+}
 
 std::string rearrangeline(std::string s)
 {
