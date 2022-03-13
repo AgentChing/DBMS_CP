@@ -157,6 +157,18 @@ public:
         storeData();
         loadData();
     }
+
+    void droptable(string tbl_name)
+    {
+        if(database.find(tbl_name) != database.end())
+        {
+            database.erase(tbl_name);
+            storeData();
+        }
+        else{
+            cout<<"COMMAND NOT EXECUTED: TABLE NOT FOUND"<<endl;
+        }
+    }
 };
 
 
@@ -175,12 +187,13 @@ void driver(Database d)
               {
                   cout<<"FOUND CREATE-------------\n";
                   d.addnew(v);
+                  d.showall();
 
               }
               else if(absolutecompare(v[0],"DROP"))
               {
-                d.showall();
                   cout<<"FOUND DROP-------------";
+                  d.droptable(v[2]);
               }else if(absolutecompare(v[0],"SELECT"))
               {
                   cout<<"FOUND SELECT-------------";
@@ -200,6 +213,7 @@ void driver(Database d)
               {
                   cout<<"FOUND QUIT-------------";
                   d.storeData();
+                  d.showall();
                   cout<<"\nDONE";
                   myfile.close();
                   return;
