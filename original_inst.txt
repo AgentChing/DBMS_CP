@@ -3,8 +3,10 @@ Create table yolo(type int, title string , year int);
 Insert into Tbl1 values (Rashomon, 25, testcase_1)
 Insert into Tbl1 values ("Miratas", 27, testcase_2)
 Insert into Tbl1 values ("FORUPDATE", 29, "NOTYETUPDATED");
-Select * from Papers WHERE title = "doremi";
-SELECT name, age,  sex from Table1 where sex="female" ;
+select id,you,me,everybody from Tbl1 where name>="Rashomon";
+select id from Tbl1 where name>"1000;
+select id from Tbl1 where name!="Rashomon";
+select id from Tbl1 where name=12;
 Update Tbl1 set info= "UPDATEDONE" where id=29;
 DROP TABLE yolo;
 QUIT;
