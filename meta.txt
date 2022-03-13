@@ -1,2 +1,4 @@
-Table1 4 id int name string age int sex string
-Papers 3 type int title string author string 
+xyz 2 id int name string 
+Tbl1 3 info string id int name string 
+Papers 3 author string title string type int 
+Table1 4 sex string name string age int id int 
