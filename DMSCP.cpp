@@ -242,12 +242,14 @@ public:
         string name = v[0];
         if(database.find(name) == database.end())
         {
+
             v.erase(v.begin());
         cout<<name<<endl;
-        vector<vector< string > > attr = breakdowntokens(tokenizefile(v[0]));
+        vector<vector< string > > attr = seperatetokens(breakdowntokens(tokenizefile(v[0])));
         Table t;
         t.name = name;
         t.attr_count = attr.size();
+
           for(int i=0;i<attr.size();i++)
           {
               if(attr[i].size()==2)
@@ -297,7 +299,10 @@ void driver(Database d)
     string inst = "Instructions.txt";
     ifstream myfile(inst);
      string line;
-     while (getline (myfile, line)) {
+     ///while (getline (myfile, line)) {
+     while (1) {
+            cout<<"CMD: ";
+            cin>>line;
               vector<string> v = tokenizefile(line);
               /*for(int i=0;i<v.size();i++)
               {
@@ -314,6 +319,11 @@ void driver(Database d)
               {
                   cout<<"FOUND DROP-------------";
                   d.droptable(v[2]);
+              }
+              else if(absolutecompare(v[0],"SHOWALL"))
+              {
+                  cout<<"FOUND SHOWALL-------------";
+                  d.showall();
               }
               else if(absolutecompare(v[0],"SELECT"))
               {
@@ -437,10 +447,10 @@ void driver(Database d)
                           {
                               x->second.erase(x->second.begin()+i);
                           }*/
-                          d.database.find(name)->second.deleterow(i);///-----------------------------------------------------------------------------------------------------
-                      }
+                          d.database.find(name)->second.deleterow(i);
                   }
 
+              }
               }
               else if(absolutecompare(v[0],"UPDATE"))
               {
