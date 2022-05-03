@@ -238,18 +238,24 @@ public:
 
     void addnew(vector<string> v)
     {
+
         v.erase(v.begin(),v.begin()+2);
         string name = v[0];
         if(database.find(name) == database.end())
         {
-
             v.erase(v.begin());
         cout<<name<<endl;
-        vector<vector< string > > attr = seperatetokens(breakdowntokens(tokenizefile(v[0])));
+        vector<vector< string > > attr = breakdowntokens(tokenizefile(v[0]));
+        /*for(int i=0;i<attr.size();i++)
+        {cout<<endl;
+            for(int j=0;j<attr[i].size();j++)
+                cout<<attr[i][j];
+        cout<<"+++++++++++++++++++";
+        }
+*/
         Table t;
         t.name = name;
         t.attr_count = attr.size();
-
           for(int i=0;i<attr.size();i++)
           {
               if(attr[i].size()==2)
@@ -299,10 +305,14 @@ void driver(Database d)
     string inst = "Instructions.txt";
     ifstream myfile(inst);
      string line;
-     ///while (getline (myfile, line)) {
-     while (1) {
-            cout<<"CMD: ";
-            cin>>line;
+    // while (getline (myfile, line)) {
+    cout<<"INSTR:: ";
+            getline(cin,line);
+    while(1){
+            if(line=="")
+            {
+                break;
+            }
               vector<string> v = tokenizefile(line);
               /*for(int i=0;i<v.size();i++)
               {
@@ -311,6 +321,11 @@ void driver(Database d)
               cout<<endl;*/
               if(absolutecompare(v[0],"CREATE"))
               {
+                  /*for(int i=0;i<v.size();i++)
+                  {
+
+                      cout<<endl<<v[i]<<"++";
+                  }*/
                   cout<<"FOUND CREATE-------------\n";
                   d.addnew(v);
 
@@ -353,9 +368,9 @@ void driver(Database d)
                     if(d.database.find(name)==d.database.end())
                     {
                         cout<<"ERROR: NO TABLE NAMED "<<name<<" FOUND"<<endl;
-                        return;
                     }
-                    d.database.find(name)->second.selection.clear();
+                    else{
+                        d.database.find(name)->second.selection.clear();
                     int len = d.database.find(name)->second.attr_value.find(v[0])->second.size();
                     for(int i=0;i<len;i++)
                     {
@@ -365,11 +380,28 @@ void driver(Database d)
                         }
                     }
                     d.database.find(name)->second.showselection(toshow);
+                    }
 
                   }
                   else{
+                    if(d.database.find(name)==d.database.end())
+                    {
+                        cout<<"ERROR: NO TABLE NAMED "<<name<<" FOUND"<<endl;
 
-                          cout<<"ERROR+warning......WARNING!!! skipping Where is not permited yet"<<endl<<" i worked my but off implementing it and you just skippin it?"<<endl<<"....oh, the disrespect..\n go get your ass some condition"<<endl;
+                    }
+                    else{
+                        auto x = d.database.find(name)->second;
+                        x.selection.clear();
+                        int len = x.attr_value.begin()->second.size();
+
+                        for(int i=0;i<len;i++)
+                        {
+                            x.selection.push_back(i);
+                        }
+                        x.showselection(toshow);
+
+                    }
+
                   }
                 }
 
@@ -385,10 +417,35 @@ void driver(Database d)
                 v.erase(v.begin());
                 if(!absolutecompare(v[0],"values"))
                 {
-                    cout<<"ERROR: INCORRECT STATEMENT"<<endl;
-                    return;
+                        //cout<<"ERROR4: INCORRECT STATEMENT"<<endl;
+                        vector<string> vals = seperatetokens(tokenizefile(v[0]));
+                        if(d.database.find(name)==d.database.end())
+                    {
+                        cout<<"COMMAND NOT EXECUTED: no table named "<<name<<" found"<<endl;
+                        return;
+                    }
+                    map<string, Table>::iterator x = d.database.find(name);
+                    //--------
+                    cout<< vals.size()<<"-----------------"<<x->second.attr_value.size()<<endl;
+                    if(vals.size() == x->second.attr_value.size())
+                    {
+                        int j=0;
+                        for(auto i = x->second.attr_value.begin(); i!=x->second.attr_value.end();i++)
+                        {
+                            i->second.push_back(vals[j]);
+                            j+=1;
+                        }
+                    }
+                    else{
+                        cout<<"ERROR: Not Enough Entries"<<endl;
+                        return;
+                    }
+
+                    //--------
+
                 }
-                v.erase(v.begin());
+                else{
+                    v.erase(v.begin());
 
                 vector<string> vals = seperatetokens(tokenizefile(v[0]));
                 if(d.database.find(name)==d.database.end())
@@ -416,6 +473,8 @@ void driver(Database d)
                     cout<<"ERROR: NO NULL ENTRY PERMITTED"<<endl;
                     return;
                 }
+                }
+
 
                }
               else if(absolutecompare(v[0],"DELETE"))
@@ -447,15 +506,77 @@ void driver(Database d)
                           {
                               x->second.erase(x->second.begin()+i);
                           }*/
-                          d.database.find(name)->second.deleterow(i);
+                          d.database.find(name)->second.deleterow(i);///-----------------------------------------------------------------------------------------------------
+                      }
                   }
 
-              }
               }
               else if(absolutecompare(v[0],"UPDATE"))
               {
                   cout<<"FOUND UPDATE-------------";
+                  v=seperatetokens(v);
+                  string name = v[1];
+                  if(absolutecompare(v[2],"SET"))
+                  {
+                      v.erase(v.begin(),v.begin()+3);
+                      vector<string> col;
+                      vector<string> val;
+                      bool flag = true;
+                      cout<<v[0]<<";;"<<endl;
+                      while(!absolutecompare(v[0],"WHERE") && v.size()!=0)
+                      {
+                          if(v[1]!="=")
+                          {
+                              cout<<"Incorrect Format 2"<<endl;
+                              flag = false;
+                              break;
+                          }
+                          else{
+                            if(d.database.find(name)->second.attr_value.find(v[0])!=d.database.find(name)->second.attr_value.end())
+                            {
+                                col.push_back(v[0]);
+                                val.push_back(v[2]);
+                                v.erase(v.begin(),v.begin()+3);
+                            }
+                            else{
+                                cout<<"ERROR: No Attribute "<<v[0]<<" found"<<endl;
+                                flag = false;
+                                break;
+                            }
+                          }
+                      }
+                      if(flag)
+                      {
+                          v.erase(v.begin());
+                          int len = d.database.find(name)->second.attr_value.begin()->second.size();
+                            for(int i=0;i<len;i++)
+                            {
+                                if(d.database.find(name)->second.checkcondition(i,v[0],v[1],v[2]))
+                                {
+                                    for(int j=0;j<col.size();j++)
+                                    {
+                                        d.database.find(name)->second.attr_value.find(col[j])->second[i] = val[j];
+                                    }
+                                }
+                            }
+                    }
 
+                  }
+                  else{
+                    cout<<"Incorrect Format"<<endl;
+                  }
+                  for(int i=0;i<v.size();i++)
+                  {
+                      cout<<endl<<v[i];
+                  }
+
+              }
+
+              else if(absolutecompare(v[0],"COMMIT"))
+              {
+                  cout<<"Commiting data-------------";
+
+                  d.storeData();
               }
               else if(absolutecompare(v[0],"QUIT"))
               {
@@ -463,13 +584,16 @@ void driver(Database d)
                   d.storeData();
                   d.showall();
                   cout<<"\nDONE";
-                  myfile.close();
+                  //myfile.close();
                   return;
 
               }
               cout<<endl;
+              cout<<"INSTR:: ";
+            getline(cin,line);
+
             }
-            myfile.close();
+           // myfile.close();
 }
 
 
