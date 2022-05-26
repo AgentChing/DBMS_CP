@@ -1,3 +1,1 @@
-Papers 3 author string title string type int 
-Table1 4 age int id int name string sex string 
-Tbl1 3 id int info string name string 
+Tbl1 3 name string id int info string 
