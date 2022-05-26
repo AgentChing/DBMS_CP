@@ -247,7 +247,7 @@ public:
         if (database.find(name) == database.end())
         {
             v.erase(v.begin());
-            cout << name << endl;
+            cout << "Table created Successfully" << endl;
             vector<vector< string > > attr = breakdowntokens(tokenizefile(v[0]));
             /*for(int i=0;i<attr.size();i++)
             {cout<<endl;
@@ -295,6 +295,7 @@ public:
         if (database.find(tbl_name) != database.end())
         {
             database.erase(tbl_name);
+            cout << "table droppped";
             storeData();
         }
         else {
@@ -304,6 +305,10 @@ public:
 
 };
 
+bool isNumber(const string& str)
+{
+    return str.find_first_not_of("0123456789") == string::npos;
+}
 
 void driver(Database d)
 {
@@ -365,9 +370,17 @@ void driver(Database d)
             v.erase(v.begin());
             string name = v[0];
             v.erase(v.begin());
-
-
-            if (absolutecompare(v[0], "WHERE"))
+            bool flag2 = false;
+            for (auto it : d.database[name].attr_value) {
+                if (it.second.size() == 0) {
+                    flag2 = true;
+                    break;
+                }
+            }
+            if (flag2) {
+                cout << "table is Empty" << endl;
+            }
+            else if (absolutecompare(v[0], "WHERE"))
             {
                 v.erase(v.begin());
                 if (d.database.find(name) == d.database.end())
@@ -423,7 +436,6 @@ void driver(Database d)
             if (!absolutecompare(v[0], "values"))
             {
                 //cout<<"ERROR4: INCORRECT STATEMENT"<<endl;
-                for (auto name : attr_names)cout << name << ' ';
                 if (d.database.find(name) == d.database.end())
                 {
                     cout << "COMMAND NOT EXECUTED: no table named " << name << " found" << endl;
@@ -434,10 +446,19 @@ void driver(Database d)
                 // cout << vals.size() << "-----------------" << x->second.attr_value.size() << endl;
                 if (attr_names.size() == x->second.attr_value.size())
                 {
-                    for (auto it : x->second.indexToAttr) {
-                        cout << it.second << ' ' << it.first << ' ' << attr_names[it.first] << endl;
-                        x->second.attr_value[it.second].push_back(attr_names[it.first]);
-                    }
+                    bool flag = false;
+                    for (auto it : x->second.indexToAttr)
+                        if (x->second.attr_type[it.second] == "int")
+                            if (!isNumber(attr_names[it.first])) {
+                                flag = true;
+                                break;
+                            }
+
+                    if (!flag)
+                        for (auto it : x->second.indexToAttr)
+                            x->second.attr_value[it.second].push_back(attr_names[it.first]);
+                    else
+                        cout << "Wrong sequence of INPUT" << endl;
                 }
                 else {
                     cout << "ERROR: Not Enough Entries" << endl;
