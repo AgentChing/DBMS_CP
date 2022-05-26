@@ -149,7 +149,7 @@ public:
     {
         for (map<string, vector<string> >::iterator itr = attr_value.begin(); itr != attr_value.end(); itr++)
         {
-            cout << "here";
+            // cout << "here";
             itr->second.erase(itr->second.begin() + i);
         }
 
@@ -454,9 +454,12 @@ void driver(Database d)
                                 break;
                             }
 
-                    if (!flag)
-                        for (auto it : x->second.indexToAttr)
+                    if (!flag) {
+                        for (auto it : x->second.indexToAttr) {
                             x->second.attr_value[it.second].push_back(attr_names[it.first]);
+                        }
+                        cout << "1 row inserted" << endl;
+                    }
                     else
                         cout << "Wrong sequence of INPUT" << endl;
                 }
@@ -492,6 +495,8 @@ void driver(Database d)
                     {
                         x->second.attr_value.find(attr_names[i])->second.push_back(vals[i]);
                     }
+                    cout << "1 row inserted" << endl;
+
                 }
                 else {
                     cout << "ERROR: NO NULL ENTRY PERMITTED" << endl;
@@ -517,23 +522,22 @@ void driver(Database d)
             }
             string name = v[2];
             v.erase(v.begin(), v.begin() + 4);
-            int len = d.database.find(name)->second.attr_value.begin()->second.size();
+            int len = d.database.find(name)->second.attr_value.begin()->second.size(), delCnt = 0;
             for (int i = len - 1; i >= 0; i--)
             {
-                cout << "Here" << endl;
-                cout << v[0] << "|" << v[1] << "|" << v[2] << endl;
                 if (d.database.find(name)->second.checkcondition(i, v[0], v[1], v[2]))
-                    cout << "TRUE" << endl;
-                if (d.database.find(name)->second.checkcondition(i, v[0], v[1], v[2]))
-                {
-                    /*for(map<string,vector<string> >::iterator x = d.database.find(name)->second.attr_value.begin(); x!=d.database.find(name)->second.attr_value.end();x++)
+                    // cout << "TRUE" << endl;
+                    if (d.database.find(name)->second.checkcondition(i, v[0], v[1], v[2]))
                     {
-                        x->second.erase(x->second.begin()+i);
-                    }*/
-                    d.database.find(name)->second.deleterow(i);///-----------------------------------------------------------------------------------------------------
-                }
+                        /*for(map<string,vector<string> >::iterator x = d.database.find(name)->second.attr_value.begin(); x!=d.database.find(name)->second.attr_value.end();x++)
+                        {
+                            x->second.erase(x->second.begin()+i);
+                        }*/
+                        delCnt++;
+                        d.database.find(name)->second.deleterow(i);///-----------------------------------------------------------------------------------------------------
+                    }
             }
-
+            cout << delCnt << " rows deleted" << endl;
         }
         else if (absolutecompare(v[0], "UPDATE"))
         {
